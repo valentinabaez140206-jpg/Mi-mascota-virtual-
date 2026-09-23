@@ -1,0 +1,94 @@
+name: Construir APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar proyecto Android
+        run: |
+          mkdir -p android-wrapper/app/src/main/java/com/mimascotavirtual/app
+          mkdir -p android-wrapper/app/src/main/res/values
+          mkdir -p android-wrapper/app/src/main/assets
+
+          cp MainActivity.java android-wrapper/app/src/main/java/com/mimascotavirtual/app/MainActivity.java
+          cp AndroidManifest.xml android-wrapper/app/src/main/AndroidManifest.xml
+          cp estilos.xml android-wrapper/app/src/main/res/values/styles.xml
+
+          cp índice.html android-wrapper/app/src/main/assets/index.html
+          cp manifiesto.json android-wrapper/app/src/main/assets/manifest.json
+          cp sw.js android-wrapper/app/src/main/assets/sw.js
+          cp icono-192.svg android-wrapper/app/src/main/assets/icon-192.svg
+
+          cat > android-wrapper/settings.gradle <<'EOF'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+
+          rootProject.name='MiMascotaVirtual'
+          include ':app'
+          EOF
+
+          cat > android-wrapper/build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application' version '8.7.3' apply false
+          }
+          EOF
+
+          cat > android-wrapper/gradle.properties <<'EOF'
+          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          android.useAndroidX=true
+          EOF
+
+          cat > android-wrapper/app/build.gradle <<'EOF'
+          plugins {
+              id 'com.android.application'
+          }
+
+          android {
+              namespace 'com.mimascotavirtual.app'
+              compileSdk 35
+
+              defaultConfig {
+                  applicationId 'com.mimascotavirtual.app'
+                  minSdk 23
+                  targetSdk 35
+                  versionCode 1
+                  versionName '1.0'
+              }
+          }
+          EOF
+
+      - name: Instalar Gradle
+        run: |
+          wget -q https://services.gradle.org/distributions/gradle-8.9-bin.zip
+          unzip -q gradle-8.9-bin.zip
+          echo "$PWD/gradle-8.9/bin" >> $GITHUB_PATH
+
+      - name: Construir APK
+        working-directory: android-wrapper
+        run: gradle assembleDebug --no-daemon
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mi-Mascota-Virtual-APK
+          path: android-wrapper/app/build/outputs/apk/debug/app-debug.apk
