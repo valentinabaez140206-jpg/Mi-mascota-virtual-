@@ -1,0 +1,17 @@
+MI MASCOTA VIRTUAL - OBTENER EL APK SIN COMPUTADORA
+
+Este proyecto está preparado para compilar el APK usando GitHub Actions desde el navegador del celular.
+
+PASOS:
+1. Entra a GitHub desde Chrome y crea una cuenta si no tienes una.
+2. Crea un repositorio NUEVO y déjalo vacío.
+3. Descarga este ZIP y descomprímelo.
+4. En GitHub, usa Add file > Upload files y sube TODO el contenido de esta carpeta.
+5. Pulsa Commit changes.
+6. En el repositorio entra en Actions.
+7. Elige "Construir APK" y pulsa Run workflow.
+8. Espera a que termine el proceso.
+9. Abre la ejecución terminada y baja hasta Artifacts.
+10. Descarga "Mi-Mascota-Virtual-APK". Dentro estará app-debug.apk.
+
+NOTA: el APK es una versión debug para pruebas. Para publicar en Google Play habría que preparar una versión firmada/release.

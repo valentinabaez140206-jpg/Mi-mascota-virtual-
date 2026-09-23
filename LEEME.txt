@@ -1,0 +1,18 @@
+MI MASCOTA VIRTUAL — VERSIÓN ANDROID
+
+Incluye:
+1) web/ — versión instalable como PWA en Android.
+2) android-wrapper/ — proyecto Android Studio que envuelve la versión web en una app nativa.
+
+INSTALACIÓN RÁPIDA (PWA):
+- La carpeta web debe estar publicada en un sitio HTTPS.
+- Abrí index.html desde ese sitio en Chrome Android.
+- Menú ⋮ > Instalar aplicación / Agregar a pantalla principal.
+
+APK:
+- Abrí android-wrapper/ con Android Studio.
+- Esperá a que Gradle sincronice.
+- Build > Build APK(s).
+- El APK generado queda en app/build/outputs/apk/.
+
+Nota: este paquete no incluye todavía un APK binario ya firmado. El proyecto Android está preparado para compilarlo en Android Studio.
